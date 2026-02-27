@@ -31,7 +31,7 @@ Price sorting ascending
     Login with valid user
     Click Element    class:product_sort_container
     Click Element    //*[@id="header_container"]/div[2]/div/span/select/option[3]
-    ${product_prices}=    Get All Product names 
+    ${product_prices}=    Get All Product prices
     Prices lowtohigh    ${product_prices}
     Sleep    5s
     Close Browser
@@ -52,7 +52,10 @@ Get All Product prices
     ${products}=    Create List
     @{product_elements}=    Get WebElements    class:inventory_item_price
     FOR    ${element}    IN    @{product_elements}
-        ${product_prices}=    Get Text    ${element}[1]
+        ${product_prices}=    Get WebElement    ${element}
+        # Log To Console    ${product_prices}
+        # //*[@id="inventory_container"]/div/div[1]/div[2]/div[2]/div
+        # //*[@id="inventory_container"]/div/div[2]/div[2]/div[2]/div/text()[2]
         Append To List    ${products}   ${product_prices}
     END
     RETURN    @{products}
@@ -77,14 +80,15 @@ Verify A to Z
         Should Be True    '${current}' <= '${next}'    Product is not in Z to A order
     END
     
-Prices lowtohigh
+Prices lowtohigh    
     [Arguments]    ${product_prices}
     ${lenght}=    Get Length    ${product_prices}
     FOR    ${index}    IN RANGE    0    ${lenght}-1
         ${current}=    Get From List    ${product_prices}    ${index}
+        Log To Console    '${current}'e
         ${next}=    Get From List    ${product_prices}    ${index+1}
 
-        Should Be True    ${current} <= ${next}    Product is not low to high price order
+        Should Be True    '${current}' <= '${next}'    Product is not low to high price order
     END
     
 
